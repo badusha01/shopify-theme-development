@@ -1,0 +1,199 @@
+{% comment %}
+    {% assign myVariable = 9 %}
+
+    {% if myVariable > 10 %}
+      <p>Variable is greater than 10</p>
+      <p>Another instruction</p>
+      {% elsif myVariable > 5 %}
+      <p>Variable greater than 5</p>
+      {% else %}
+       <p>Variable not greater than 10 </p>
+    {% endif %}
+
+  <p>{{ product.tags[0] }}</p>
+
+  {% if product.title contains 'Snowboard' %}
+      <p>This is a snowboard</p>
+  {% endif %}
+
+  {% if product.tags contains "Winter" %}
+      <p>This is a winter product</p>
+  {% endif %}
+
+  {% unless product.tags contains "Premium" %}
+    <p>This product does not contain Premium tag </p>
+    {% else %}
+    <p>This product contains the Premium tag</p>
+  {% endunless %}
+
+  {% unless myVariable <= 10 %}
+    <p>My variable is greater than 10</p>
+    {% else %}
+    <p>My variable is not greater than 10</p>
+  {% endunless %}
+
+  {% if product.title contains 'Snowboard' and product.price <65000 %}
+    <p>This is an affordable snowboard</p>
+  {% endif %}
+
+
+  {% comment %}
+   product.title contains 'Snowboard' or product.type == 'snowboard' and product.price < 100
+   product.title contains 'Snowboard' or product.type == 'snowboard' and false
+   product.title contains 'Snowboard' or true and false
+   product.title contains 'Snowboard' or false
+   true or false
+   true
+   {% endcomment %}
+
+  {% if product.title contains 'Snowboard' or product.type == 'snowboard' and product.price < 100 %}
+    <p>This is an affordable snowboard</p>
+  {% endif %}
+{% endcomment %}
+
+{% comment %} for loop {% endcomment %}
+
+{% comment %}
+  {% for product in collection.products limit: 5 offset: 4 %}
+   <p style="
+     {% if forloop.first %}
+      color: green
+      {% elsif forloop.last %}
+       color: orange
+      {% endif %}
+       "
+     >
+       {{ forloop.index }} - {{ product.title }}
+     </p>
+     {% if product.tags.size > 0 %}
+       <h2>Tags</h2>
+       <ul>
+         {% for tag in product.tags %}
+           {% if tag == 'Sport' %}
+             {% continue %}
+           {% endif %}
+           <li>Product Index : {{ forloop.parentloop.index  }} | Tag: {{ tag }} </li>
+         {% endfor %}
+       </ul>
+     {% endif %}
+     {% else %}
+     <p>This collection has no products</p>
+  {% endfor %}
+
+  {% for i in (11..15) %}
+   <p>Hello world {{ i }}, {{ forloop.index }} </p>
+  {% endfor %}
+{% endcomment %}
+
+{% comment %}
+  {% assign myNumber = '11' %}
+
+  {% assign myNewNumber = myNumber | plus: 0 %}
+
+  {% if myNewNumber > 5 %}
+    <p>My number is greater than 5</p>
+  {% endif %}
+
+  {% assign moduloOfMyNumber = myNewNumber | modulo: 2 %}
+  {% if moduloOfMyNumber == 0 %}
+    <p>Even</p>
+    {% else %}
+    <p>Odd</p>
+  {% endif %}
+
+  {% assign myAbsNumber = -11 | abs %}
+  <p>{{ myAbsNumber }}</p>
+
+  {% assign myRoundedNumber = 10.5 | ceil %}
+  <p>{{ myRoundedNumber }}</p>
+{% endcomment %}
+
+{% comment %}
+  {% assign myString = 'HELLO world' %}
+  {% assign myOtherString = ' some EXTRA text' %}
+  <p>{{ myString | downcase | append: myOtherString | downcase }}</p>
+
+  {% assign myStringWithWhiteSpace = 'hello this has whitespace   ' %}
+  <p>{{ myStringWithWhiteSpace | append: '!' }}</p>
+  <p>{{ myStringWithWhiteSpace | strip | append: '!' }}</p>
+
+  {% assign myHtmlText = "<p style='color: red'>Hello some extra text</p>" %}
+  {{ myHtmlText | strip_html }}
+
+  {% assign myLongString = 'This is some very long text that will be trimmed' %}
+  <p>{{ myLongString | truncatewords: 4 }}</p>
+
+  {{ myHtmlText | strip_html | truncate: 35 }}
+
+  {% assign multilineText = '
+    This is the first line
+    This is the second line
+    This is the third line
+    '
+    | newline_to_br
+  %}
+
+  <p>{{ multilineText }}</p>
+
+  {% assign myText = 'Hello some extra text some extra text' %}
+  <p>{{ myText | replace: 'text', 'string' }}</p>
+
+  {% assign myText = 'Hello some extra text some extra text' %}
+  <p>{{ myText | remove_last: 'text' }}</p>
+
+  {% assign myNumbers = 'html|orange,css|blue,javascript|yellow' | split: ',' %}
+
+  {% for language in myNumbers %}
+    {% assign languageName = language | split: '|' | first %}
+    {% assign languageColor = language | split: '|'| last %}
+    <p style="color: {{ languageColor }}">{{ languageName }}</p>
+  {% endfor %}
+{% endcomment %}
+
+{% comment %}
+  {% assign products = collection.products %}
+  {% assign productTitles = products| map: 'title' | reverse %}
+
+  {% for productTitle in productTitles %}
+    <p>{{ productTitle }}</p>
+  {% endfor %}
+
+  <p>{{ productTitles | join: ' - ' }}</p>
+  <p>{{productTitles | first }}</p>
+  <p>{{productTitles | last }}</p>
+  <p>{{productTitles |  size}}</p>
+
+  {% assign priceSortedItems = products | sort: 'price' %}
+  {% for product in products %}
+    <p>{{ product.title }} - {{ product.price | money }}</p>
+  {% endfor %}
+
+  {% assign allPrices = products | map: 'price' %}
+  {% for price in allPrices %}
+    <p>{{ price | money }}</p>
+  {% endfor %}
+
+  {}
+
+  {% assign tags = '' %}
+  {% for product in products %}
+    {% for tag in product.tags %}
+      {% assign tags = tags | append: tag | append: ' ' %}
+    {% endfor %}
+  {% endfor %}
+
+  <p>{{ tags | split: ' ' | uniq | join: ' ' }}</p>
+{% endcomment %}
+
+{% comment %} {% liquid
+  assign myVariable = 10
+
+  for product in collection.products
+    echo '<p>' | append: product.title | append: '</p>'
+  endfor
+%}
+
+<p>{{ myVariable }}</p>
+<p>{{ tutorial }}</p>
+<p>{{ title }}</p>
+<p>{{ description }}</p> {% endcomment %}
